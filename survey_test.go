@@ -6,11 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ActiveState/survey/core"
-	"github.com/ActiveState/survey/terminal"
-	expect "github.com/Netflix/go-expect"
+	"github.com/Netflix/go-expect"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/ActiveState/survey/core"
+	"github.com/ActiveState/survey/terminal"
 )
 
 func init() {

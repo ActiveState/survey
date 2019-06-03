@@ -7,9 +7,10 @@ import (
 	"os/exec"
 	"runtime"
 
+	"github.com/kballard/go-shellquote"
+
 	"github.com/ActiveState/survey/core"
 	"github.com/ActiveState/survey/terminal"
-	shellquote "github.com/kballard/go-shellquote"
 )
 
 /*
