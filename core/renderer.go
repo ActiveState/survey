@@ -3,7 +3,7 @@ package core
 import (
 	"strings"
 
-	"gopkg.in/AlecAivazis/survey.v1/terminal"
+	"github.com/ActiveState/survey/terminal"
 )
 
 type Renderer struct {

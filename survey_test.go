@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/AlecAivazis/survey.v1/core"
+	"github.com/ActiveState/survey/core"
 )
 
 func init() {
