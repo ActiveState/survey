@@ -5,8 +5,8 @@ import (
 	"io"
 	"os"
 
-	"gopkg.in/AlecAivazis/survey.v1/core"
-	"gopkg.in/AlecAivazis/survey.v1/terminal"
+	"github.com/ActiveState/survey/core"
+	"github.com/ActiveState/survey/terminal"
 )
 
 // PageSize is the default maximum number of items to show in select/multiselect prompts
