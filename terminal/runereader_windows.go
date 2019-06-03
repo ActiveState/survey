@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"os"
 	"syscall"
 	"unsafe"
 )
@@ -57,7 +56,7 @@ type runeReaderState struct {
 	buf  *bufio.Reader
 }
 
-func newRuneReaderState(input *os.File) runeReaderState {
+func newRuneReaderState(input FileReader) runeReaderState {
 	return runeReaderState{
 		buf: bufio.NewReader(input),
 	}
@@ -98,8 +97,13 @@ func (rr *RuneReader) ReadRune() (rune, int, error) {
 	if err != nil {
 		return r, size, err
 	}
+
 	// parse ^[ sequences to look for arrow keys
 	if r == '\033' {
+		if rr.state.buf.Buffered() == 0 {
+			// no more characters so must be `Esc` key
+			return KeyEscape, 1, nil
+		}
 		r, size, err = rr.state.buf.ReadRune()
 		if err != nil {
 			return r, size, err
@@ -120,6 +124,18 @@ func (rr *RuneReader) ReadRune() (rune, int, error) {
 			return KeyArrowUp, 1, nil
 		case 'B':
 			return KeyArrowDown, 1, nil
+		case 'H': // Home button
+			return SpecialKeyHome, 1, nil
+		case 'F': // End button
+			return SpecialKeyEnd, 1, nil
+		case '3': // Delete Button
+			// discard the following '~' key from buffer
+			rr.state.buf.Discard(1)
+			return SpecialKeyDelete, 1, nil
+		default:
+			// discard the following '~' key from buffer
+			rr.state.buf.Discard(1)
+			return IgnoreKey, 1, nil
 		}
 		return r, size, fmt.Errorf("Unknown Escape Sequence: %q", []rune{'\033', '[', r})
 	}
