@@ -1,4 +1,4 @@
-module gopkg.in/AlecAivazis/survey.v1
+module github.com/ActiveState/survey
 
 require (
 	github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8

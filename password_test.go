@@ -6,7 +6,7 @@ import (
 
 	expect "github.com/Netflix/go-expect"
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/AlecAivazis/survey.v1/core"
+	"github.com/ActiveState/survey/core"
 )
 
 func init() {
