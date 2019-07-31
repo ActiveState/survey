@@ -49,28 +49,37 @@ type keyEventRecord struct {
 	wdControlKeyState uint32
 }
 
-type runeReaderState struct {
+type winConsoleRuneReaderState struct {
+	in   FileReader
 	term uint32
 }
 
-func newRuneReaderState(input FileReader) runeReaderState {
-	return runeReaderState{}
+func newRuneReaderState(input FileReader) RuneReaderState {
+	_, _, err := getConsoleMode.Call(uintptr(s.in.Fd()), uintptr(unsafe.Pointer(&s.term)))
+	if err == nil {
+		return newWinConsoleRuneReaderState(input)
+	}
+	return newTerminalRuneReaderState(input)
 }
 
-func (rr *RuneReader) Buffer() *bytes.Buffer {
+func newWinConsoleRuneReaderState(input FileReader) winConsoleRuneReaderState {
+	return winConsoleRuneReaderState{in: input}
+}
+
+func (s *winConsoleRuneReaderState) Buffer() *bytes.Buffer {
 	return nil
 }
 
-func (rr *RuneReader) SetTermMode() error {
-	r, _, err := getConsoleMode.Call(uintptr(rr.stdio.In.Fd()), uintptr(unsafe.Pointer(&rr.state.term)))
+func (s *winConsoleRuneReaderState) SetTermMode() error {
+	r, _, err := getConsoleMode.Call(uintptr(s.in.Fd()), uintptr(unsafe.Pointer(&s.term)))
 	// windows return 0 on error
 	if r == 0 {
 		return err
 	}
 
-	newState := rr.state.term
+	newState := s.term
 	newState &^= ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT
-	r, _, err = setConsoleMode.Call(uintptr(rr.stdio.In.Fd()), uintptr(newState))
+	r, _, err = setConsoleMode.Call(uintptr(s.in.Fd()), uintptr(newState))
 	// windows return 0 on error
 	if r == 0 {
 		return err
@@ -78,8 +87,8 @@ func (rr *RuneReader) SetTermMode() error {
 	return nil
 }
 
-func (rr *RuneReader) RestoreTermMode() error {
-	r, _, err := setConsoleMode.Call(uintptr(rr.stdio.In.Fd()), uintptr(rr.state.term))
+func (s *winConsoleRuneReaderState) RestoreTermMode() error {
+	r, _, err := setConsoleMode.Call(uintptr(s.in.Fd()), uintptr(s.term))
 	// windows return 0 on error
 	if r == 0 {
 		return err
@@ -87,11 +96,11 @@ func (rr *RuneReader) RestoreTermMode() error {
 	return nil
 }
 
-func (rr *RuneReader) ReadRune() (rune, int, error) {
+func (s *winConsoleRuneReaderState) ReadRune() (rune, int, error) {
 	ir := &inputRecord{}
 	bytesRead := 0
 	for {
-		rv, _, e := readConsoleInput.Call(rr.stdio.In.Fd(), uintptr(unsafe.Pointer(ir)), 1, uintptr(unsafe.Pointer(&bytesRead)))
+		rv, _, e := readConsoleInput.Call(s.in.Fd(), uintptr(unsafe.Pointer(ir)), 1, uintptr(unsafe.Pointer(&bytesRead)))
 		// windows returns non-zero to indicate success
 		if rv == 0 && e != nil {
 			return 0, 0, e
