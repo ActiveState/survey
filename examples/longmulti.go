@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	survey "github.com/AlecAivazis/survey/v2"
+	survey "github.com/ActiveState/survey"
 )
 
 // the questions to ask

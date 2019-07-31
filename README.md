@@ -12,7 +12,7 @@ package main
 
 import (
     "fmt"
-    "github.com/AlecAivazis/survey/v2"
+    "github.com/ActiveState/survey"
 )
 
 // the questions to ask
@@ -84,9 +84,9 @@ Examples can be found in the `examples/` directory. Run them
 to see basic behavior:
 
 ```bash
-go get github.com/AlecAivazis/survey/v2
+go get github.com/ActiveState/survey
 
-cd $GOPATH/src/github.com/AlecAivazis/survey/v2
+cd $GOPATH/src/github.com/ActiveState/survey
 
 go run examples/simple.go
 go run examples/validation.go
@@ -293,8 +293,8 @@ looks for by setting the `HelpInputRune` variable in `survey/core`:
 
 ```golang
 import (
-    "github.com/AlecAivazis/survey/v2"
-    surveyCore "github.com/AlecAivazis/survey/v2/core"
+    "github.com/ActiveState/survey"
+    surveyCore "github.com/ActiveState/survey/core"
 )
 
 number := ""

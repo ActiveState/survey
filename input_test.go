@@ -9,8 +9,8 @@ import (
 
 	expect "github.com/Netflix/go-expect"
 	"github.com/stretchr/testify/assert"
-	"github.com/AlecAivazis/survey/v2/core"
-	"github.com/AlecAivazis/survey/v2/terminal"
+	"github.com/ActiveState/survey/core"
+	"github.com/ActiveState/survey/terminal"
 )
 
 func init() {

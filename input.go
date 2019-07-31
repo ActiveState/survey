@@ -1,7 +1,7 @@
 package survey
 
 import (
-	"github.com/AlecAivazis/survey/v2/core"
+	"github.com/ActiveState/survey/core"
 )
 
 /*
